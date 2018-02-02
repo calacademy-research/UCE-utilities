@@ -305,15 +305,28 @@ def write_compound_distributions_block(UCE_id_list,outfile):
                 <Uniform id="Uniform.12" name="distr" upper="10000.0"/>
             </prior>
         """),2))
+    first = True
     for cur_UCE in UCE_id_list:
-        string = indent (textwrap.dedent("""
+        if(first):
+            string = indent (textwrap.dedent("""
+                <prior id="KappaPrior.s:XXXXX" name="distribution" x="@kappa.s:XXXXX">
+                    <LogNormal id="LogNormalDistributionModel.20" name="distr">
+                        <parameter id="RealParameter.20" estimate="false" name="M">1.0</parameter>
+                        <parameter id="RealParameter.21" estimate="false" name="S">1.25</parameter>
+                    </LogNormal>
+                </prior>
+            """),3)
+            first=False
+        else:
+            string = indent (textwrap.dedent("""
             <prior id="KappaPrior.s:XXXXX" name="distribution" x="@kappa.s:XXXXX">
                 <LogNormal id="LogNormalDistributionModel.20.XXXXX" name="distr">
                     <parameter id="RealParameter.20.XXXXX" estimate="false" name="M">1.0</parameter>
                     <parameter id="RealParameter.21.XXXXX" estimate="false" name="S">1.25</parameter>
                 </LogNormal>
             </prior>
-        """),3)
+            """),3)
+        first = False
         outfile.write(string.replace("XXXXX",cur_UCE))
 
     outfile.write(indent(textwrap.dedent("""</distribution>\n"""),2))
@@ -323,6 +336,7 @@ def write_compound_likelyhood_distributions_block(UCE_id_list,outfile):
         <distribution id="likelihood" spec="util.CompoundDistribution">
         """),2))
     first = True
+    first_string = None
     for cur_UCE in UCE_id_list:
         if first:
             string = indent (textwrap.dedent("""
@@ -340,18 +354,20 @@ def write_compound_likelyhood_distributions_block(UCE_id_list,outfile):
                 </distribution>
             """),3)
             first = False
+            first_string = cur_UCE
         else:
             string = indent (textwrap.dedent("""
-                <distribution id="treeLikelihood.XXXXX" spec="TreeLikelihood" data="@XXXXX" tree="@Tree.t:XXXXX">
-                    <siteModel id="SiteModel.s:XXXXX" spec="SiteModel" mutationRate="@mutationRate.s:XXXXX">
-                        <parameter id="gammaShape.s:XXXXX" estimate="false" name="shape">1.0</parameter>
-                        <parameter id="proportionInvariant.s:XXXXX" estimate="false" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
-                        <substModel id="hky.s:XXXXX" spec="HKY" kappa="@kappa.s:XXXXX">
-                            <frequencies id="empiricalFreqs.s:XXXXX" spec="Frequencies" data="@XXXXX"/>
-                        </substModel>
-                    </siteModel>
-                </distribution>
+            <distribution id="treeLikelihood.XXXXX" spec="TreeLikelihood" branchRateModel="@StrictClock.c:YYYYY" data="@XXXXX" tree="@Tree.t:XXXXX">
+                <siteModel id="SiteModel.s:XXXXX" spec="SiteModel" mutationRate="@mutationRate.s:XXXXX">
+                    <parameter id="gammaShape.s:XXXXX" estimate="false" name="shape">1.0</parameter>
+                    <parameter id="proportionInvariant.s:XXXXX" estimate="false" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
+                    <substModel id="hky.s:XXXXX" spec="HKY" kappa="@kappa.s:XXXXX">
+                        <frequencies id="empiricalFreqs.s:XXXXX" spec="Frequencies" data="@XXXXX"/>
+                    </substModel>
+                </siteModel>
+            </distribution>
             """),3)
+            string = string.replace("YYYYY",first_string)
         outfile.write(string.replace("XXXXX",cur_UCE))
 
     outfile.write(indent(textwrap.dedent("""</distribution>\n"""),2))
@@ -432,7 +448,7 @@ def write_operator_singles(UCE_id_list,outfile):
 def write_operator_KappaScaler(UCE_id_list,outfile):
     for cur_UCE in UCE_id_list:
         string = indent(textwrap.dedent("""\
-            <operator id="KappaScaler.s:XXXXX" spec="ScaleOperator" parameter="@kappa.s:uce-1" scaleFactor="0.75" weight="1.0"/>
+            <operator id="KappaScaler.s:XXXXX" spec="ScaleOperator" parameter="@kappa.s:XXXXX" scaleFactor="0.75" weight="1.0"/>
         """),1)
 
         outfile.write(string.replace("XXXXX",cur_UCE))
@@ -507,7 +523,7 @@ def write_treelog(UCE_id_list,outfile):
     for cur_UCE in UCE_id_list:
         string = indent (textwrap.dedent("""
             <logger id="treelog.t:XXXXX" fileName="$(tree).trees" logEvery="5000" mode="tree">
-                <log id="TreeWithMetaDataLogger.t:XXXXX" spec="beast.evolution.tree.TreeWithMetaDataLogger" tree="@Tree.t:uce-13"/>
+                <log id="TreeWithMetaDataLogger.t:XXXXX" spec="beast.evolution.tree.TreeWithMetaDataLogger" tree="@Tree.t:XXXXX"/>
             </logger>
         """),1)
         outfile.write(string.replace("XXXXX",cur_UCE))
