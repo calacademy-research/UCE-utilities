@@ -240,7 +240,6 @@ def write_tree_and_parameter_xml(UCE_id_list,outfile):
 
 def write_single_parameters_xml(outfile):
     string = indent (textwrap.dedent("""\
-            <parameter id="mutationRate.s:uce-27" name="stateNode">1.0</parameter>
             <parameter id="constPopSizes.Species" lower="0.0" name="stateNode" upper="2.0">1.0</parameter>
             <parameter id="constPopMean.Species" lower="0.0" name="stateNode">1.0</parameter>
             <parameter id="netDiversificationRate.t:Species" lower="0.0" name="stateNode" upper="10000.0">1.0</parameter>
@@ -308,8 +307,8 @@ def write_compound_distributions_block(UCE_id_list,outfile):
         """),2))
     for cur_UCE in UCE_id_list:
         string = indent (textwrap.dedent("""
-            <prior id="KappaPrior.s:uce-9" name="distribution" x="@kappa.s:XXXXX">
-                <LogNormal id="LogNormalDistributionModel.20.uce-9" name="distr">
+            <prior id="KappaPrior.s:XXXXX" name="distribution" x="@kappa.s:XXXXX">
+                <LogNormal id="LogNormalDistributionModel.20.XXXXX" name="distr">
                     <parameter id="RealParameter.20.XXXXX" estimate="false" name="M">1.0</parameter>
                     <parameter id="RealParameter.21.XXXXX" estimate="false" name="S">1.25</parameter>
                 </LogNormal>
@@ -415,9 +414,6 @@ def write_operator_FixMeanMutationRatesOperator(UCE_id_list,outfile):
 def write_operator_singles(UCE_id_list,outfile):
     for cur_UCE in UCE_id_list:
         string = indent(textwrap.dedent("""\
-            <operator id="clockUpDownOperator.c:XXXXX" spec="UpDownOperator" scaleFactor="0.95" weight="3.0">
-                <down idref="Tree.t:XXXXX"/>
-            </operator>
             <operator id="TreeScaler.t:XXXXX" spec="ScaleOperator" scaleFactor="0.95" tree="@Tree.t:XXXXX" weight="3.0"/>
             <operator id="TreeRootScaler.t:XXXXX" spec="ScaleOperator" rootOnly="true" scaleFactor="0.7" tree="@Tree.t:XXXXX" weight="3.0"/>
             <operator id="UniformOperator.t:XXXXX" spec="Uniform" tree="@Tree.t:XXXXX" weight="15.0"/>
