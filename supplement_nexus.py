@@ -194,7 +194,7 @@ for cur_filename in os.listdir('.'):
             if(len(hyphens) < 1):
                 hyphens = hyphens + " "
 
-            for i in xrange(1,sequence_length):
+            for i in xrange(0,sequence_length):
                 hyphens = hyphens + "-"
             write_string = write_string+hyphens+"\n"
             # print ("String: "+ write_string)
