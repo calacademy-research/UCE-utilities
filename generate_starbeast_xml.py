@@ -294,7 +294,7 @@ def write_init_block(UCE_id_list,outfile,indent_level):
 
 def write_start_posterior_distribution(outfile,indent_level):
     outfile.write(indent(textwrap.dedent("""\
-        <distribution id="posterior" spec="util.CompoundDistribution">
+        <distribution id="posterior" spec="util.CompoundDistribution" useThreads="true">
         """),indent_level))
 
 def write_end_posterior_distribution(outfile,indent_level):
@@ -367,7 +367,7 @@ def write_compound_likelyhood_distributions_block(UCE_id_list,outfile,indent_lev
     for cur_UCE in UCE_id_list:
         if first:
             string = indent (textwrap.dedent("""
-                <distribution id="treeLikelihood.XXXXX" spec="TreeLikelihood" data="@XXXXX" tree="@Tree.t:XXXXX">
+                <distribution id="treeLikelihood.XXXXX" spec="ThreadedTreeLikelihood" data="@XXXXX" tree="@Tree.t:XXXXX">
                     <siteModel id="SiteModel.s:XXXXX" spec="SiteModel" mutationRate="@mutationRate.s:XXXXX">
                         <parameter id="gammaShape.s:XXXXX" estimate="false" name="shape">1.0</parameter>
                         <parameter id="proportionInvariant.s:XXXXX" estimate="false" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
@@ -384,7 +384,7 @@ def write_compound_likelyhood_distributions_block(UCE_id_list,outfile,indent_lev
             first_string = cur_UCE
         else:
             string = indent (textwrap.dedent("""
-            <distribution id="treeLikelihood.XXXXX" spec="TreeLikelihood" branchRateModel="@StrictClock.c:YYYYY" data="@XXXXX" tree="@Tree.t:XXXXX">
+            <distribution id="treeLikelihood.XXXXX" spec="ThreadedTreeLikelihood" branchRateModel="@StrictClock.c:YYYYY" data="@XXXXX" tree="@Tree.t:XXXXX">
                 <siteModel id="SiteModel.s:XXXXX" spec="SiteModel" mutationRate="@mutationRate.s:XXXXX">
                     <parameter id="gammaShape.s:XXXXX" estimate="false" name="shape">1.0</parameter>
                     <parameter id="proportionInvariant.s:XXXXX" estimate="false" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
